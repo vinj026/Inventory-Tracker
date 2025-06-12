@@ -1,0 +1,60 @@
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap");
+@import "tailwindcss";
+
+:root {
+  font-family: "Manrope", sans-serif;
+  font-style: normal;
+}
+
+hmtl,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+@theme {
+  --font-display: "Manrope", "sans-serif";
+  --color-white-100: #f2f2f2;
+  --color-white-200: #f2f2f2;
+  --color-white-300: #eeeeee;
+  --color-white-400: #dedede;
+  --color-white-500: #cccccc;
+  --color-white-600: #bababa;
+  --color-white-700: #a3a3a3;
+  --color-white-800: #878787;
+  --color-white-900: #616161;
+  --color-white-950: #454545;
+  --color-black-50: #616161;
+  --color-black-100: #595959;
+  --color-black-200: #4d4d4d;
+  --color-black-300: #404040;
+  --color-black-400: #363636;
+  --color-black-500: #282828;
+  --color-black-600: #212121;
+  --color-black-700: #171717;
+  --color-black-800: #0f0f0f;
+  --color-black-900: #080808;
+  --color-black-950: #050505;
+  --color-green-50: #ceeedf;
+  --color-green-100: #c3ead8;
+  --color-green-200: #a8e0c7;
+  --color-green-300: #86d4b1;
+  --color-green-400: #64c89b;
+  --color-green-500: #41b882;
+  --color-green-600: #3ba675;
+  --color-green-700: #349368;
+  --color-green-800: #2b7955;
+  --color-green-900: #1d533b;
+  --color-green-950: #17402d;
+  --color-red-50: #ffe7c7;
+  --color-red-100: #ffe2bd;
+  --color-red-200: #ffd7a3;
+  --color-red-300: #ffce8f;
+  --color-red-400: #ffc375;
+  --color-red-500: #ffb75a;
+  --color-red-600: #ff9b1a;
+  --color-red-700: #eb8400;
+  --color-red-800: #c26d00;
+  --color-red-900: #8a4e00;
+  --color-red-950: #663900;
+}
