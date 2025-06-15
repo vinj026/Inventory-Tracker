@@ -1,19 +1,23 @@
 <script setup>
-import { reactive, h } from "vue";
+import { reactive, h, watch, computed } from "vue";
 import {
-  LayoutDashboard,
   Package,
   ArrowDownUp,
   FileChartLine,
   PanelLeftClose,
+  House,
 } from "lucide-vue-next";
 
+import { useRoute } from "vue-router";
+
+const route = useRoute();
+
 const navIcon = (iconComponent) => {
-  return h(iconComponent, { class: "text-black-600 w-5" });
+  return h(iconComponent, { class: "text-black-500 w-5" });
 };
 
 const nav = reactive([
-  { name: "Dashboard", icon: navIcon(LayoutDashboard), path: "/dashboard" },
+  { name: "Dashboard", icon: navIcon(House), path: "/dashboard" },
   { name: "Products", icon: navIcon(Package), path: "/product" },
   { name: "Transaction", icon: navIcon(ArrowDownUp), path: "/transaction" },
   { name: "Analytics", icon: navIcon(FileChartLine), path: "/analytics" },
@@ -26,23 +30,31 @@ const sideBar = reactive({
     sideBar.isExpanded = !sideBar.isExpanded;
   },
 });
+
+const currPage = computed(() => route.path.replace(/^\//, ""));
+
+watch(route, () => {
+  console.log(currPage.value);
+});
 </script>
 
 <template>
   <div
     :class="[
-      'flex flex-col text-black-400 p-7 gap-10 justify-between border-r border-white-500 duration-300 ease-out origin-left',
+      'flex flex-col text-black-500 p-7 gap-10 justify-between border-r border-white-500 duration-300 ease-out origin-left',
       sideBar.isExpanded ? 'w-70' : 'w-25',
     ]"
   >
-    <div class="flex justify-center items-center h-10 w-full gap-6">
+    <div
+      class="flex justify-center items-center h-10 w-full text-black-400 gap-6"
+    >
       <img
         src="@/assets/logoipsum-263.svg"
         alt="logo"
         v-show="sideBar.isExpanded"
       />
       <PanelLeftClose
-        class="text-black-200 hover:text-black-400 hover:cursor-pointer"
+        class="hover:text-black-400 hover:cursor-pointer"
         :class="{ 'rotate-180': !sideBar.isExpanded }"
         @click="sideBar.handleClick"
       />
@@ -55,11 +67,15 @@ const sideBar = reactive({
         <li v-for="item in nav" :key="item.name">
           <RouterLink
             :to="item.path"
-            class="flex items-center h-10 gap-3 rounded-xl px-3 hover:bg-gray-200 transition-all"
+            class="flex items-center h-10 mt-4 gap-4 rounded-xl px-3 hover:bg-white-400 transition-all"
+            :class="item.path === route.path ? 'bg-white-400' : ''"
           >
-            <component :is="item.icon" class="w-5 h-5 shrink-0" />
+            <component
+              :is="item.icon"
+              class="w-5 h-5 shrink-0 text-black-200"
+            />
             <span
-              class="text-sm font-medium text-gray-800 transition-all duration-300"
+              class="text-md font-medium transition-all duration-300"
               :class="
                 sideBar.isExpanded
                   ? 'opacity-100 scale-100'
