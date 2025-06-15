@@ -43,6 +43,7 @@ const sideBar = reactive({
       />
       <PanelLeftClose
         class="text-black-200 hover:text-black-400 hover:cursor-pointer"
+        :class="{ 'rotate-180': !sideBar.isExpanded }"
         @click="sideBar.handleClick"
       />
     </div>
