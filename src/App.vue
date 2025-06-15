@@ -1,9 +1,9 @@
 <script setup>
-import HomeView from "./views/HomeView.vue";
+import MainLayout from "./views/MainLayout.vue";
 </script>
 
 <template>
-  <div class="flex justify-center min-w-full min-h-screen p-4 bg-white-100">
-    <HomeView />
+  <div class="">
+    <MainLayout />
   </div>
 </template>
