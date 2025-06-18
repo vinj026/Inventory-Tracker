@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 import { reactive } from "vue";
 
 export const useInventoryStore = defineStore("inventory", () => {
-  const products = reactive({
+  const productsStats = reactive({
     "Total Product in Inventory": {
       quantity: 2936,
       icon: "Warehouse",
@@ -21,5 +21,12 @@ export const useInventoryStore = defineStore("inventory", () => {
     },
   });
 
-  return { products };
+  const productInventory = reactive({
+    category: [],
+    addCategory(newCategory) {
+      this.category.push(newCategory);
+    },
+  });
+
+  return { productsStats, productInventory };
 });
