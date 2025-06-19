@@ -16,6 +16,74 @@ const inputFocus = reactive({
 const ui = useUIStore();
 const categoryInput = ref("");
 let ignoreNextClick = false;
+const formInput = reactive({
+  productName: "",
+  SKU: "",
+  category: "",
+  costPrice: "",
+  sellingPrice: "",
+  quantity: "",
+  unitType: "",
+});
+
+const formInputError = reactive({
+  productName: {
+    error: false,
+    errorMsg: "Product name is required.",
+  },
+  SKU: {
+    error: false,
+    errorMsg: "SKU cannot be empty.",
+  },
+  category: {
+    error: false,
+    errorMsg: "Please select a category.",
+  },
+  costPrice: {
+    error: false,
+    errorMsg: "Cost price is required.",
+  },
+  sellingPrice: {
+    error: false,
+    errorMsg: "Selling price is required.",
+  },
+  quantity: {
+    error: false,
+    errorMsg: "Quantity is required.",
+  },
+  unitType: {
+    error: false,
+    errorMsg: "Please select a unit type.",
+  },
+});
+
+function isFormValid() {
+  let isValid = true;
+
+  Object.entries(formInput).forEach(([key, value]) => {
+    if (!value || value.trim() === "") {
+      formInputError[key].error = true;
+
+      console.log("Form has errors.");
+      isValid = false;
+    } else {
+      formInputError[key].error = false;
+    }
+  });
+
+  return isValid;
+}
+
+function handleSubmitForm() {
+  isFormValid();
+  // if (isFormValid()) {
+  //   console.log("Form is valid, submitting...");
+  //   // inventoryStore.productInventory.addProduct(formInput)
+  // } else {
+  //   console.log("Form has errors.");
+  // }
+  // // inventoryStore.productInventory.addProduct(formInput);
+}
 
 function handleClickOutside(event) {
   const formEl = document.getElementById("form");
@@ -47,6 +115,10 @@ watch(
     }
   },
 );
+
+watch(formInputError, (newVal) => {
+  console.log(newVal);
+});
 </script>
 
 <template>
@@ -68,21 +140,29 @@ watch(
     <form class="flex flex-col gap-4" action="">
       <FormField
         FieldName="Product Name"
+        v-model="formInput.productName"
         Type="text"
         Placeholder="e.g. Blue T-Shirt"
+        :HasError="formInputError.productName.error"
+        :ErrorMessage="formInputError.productName.errorMsg"
       />
       <FormField
         FieldName="SKU"
+        v-model="formInput.SKU"
         Type="text"
         Placeholder="e.g. BLU-TSHIRT-001"
+        :HasError="formInputError.SKU.error"
+        :ErrorMessage="formInputError.SKU.errorMsg"
       />
       <div>
         <FormField
           FieldName="Category"
+          v-model="formInput.category"
           Placeholder="e.g. Clothing"
-          v-model="categoryInput"
           @focus="inputFocus.isCategoryFocus = true"
           @blur="inputFocus.isCategoryFocus = false"
+          :HasError="formInputError.category.error"
+          :ErrorMessage="formInputError.category.errorMsg"
         >
           <template #append>
             <div
@@ -104,27 +184,44 @@ watch(
       <div class="flex gap-2">
         <FormField
           FieldName="Cost Price"
+          v-model="formInput.costPrice"
           Type="number"
           Placeholder="e.g. 50000"
+          :HasError="formInputError.costPrice.error"
+          :ErrorMessage="formInputError.costPrice.errorMsg"
         />
         <FormField
           FieldName="Selling Price"
+          v-model="formInput.sellingPrice"
           Type="number"
           Placeholder="e.g. 75000"
+          :HasError="formInputError.sellingPrice.error"
+          :ErrorMessage="formInputError.sellingPrice.errorMsg"
         />
       </div>
 
       <div class="flex w-full gap-2 justify-center items-center">
-        <FormField FieldName="Quantity" Type="Number" Placeholder="e.g. 1000" />
+        <FormField
+          FieldName="Quantity"
+          v-model="formInput.quantity"
+          Type="Number"
+          Placeholder="e.g. 1000"
+          :HasError="formInputError.quantity.error"
+          :ErrorMessage="formInputError.quantity.errorMsg"
+        />
         <div class="flex flex-col gap-1">
           <h1 class="font-bold text-black-400 text-md">Unit Type</h1>
           <div class="border border-white-400 p-2 rounded-lg">
-            <DropdownUnit />
+            <DropdownUnit v-model="formInput.unitType" />
           </div>
         </div>
       </div>
     </form>
 
-    <Button Name="Submit" class="hover:cursor-pointer" />
+    <Button
+      Name="Submit"
+      @click="handleSubmitForm"
+      class="hover:cursor-pointer"
+    />
   </div>
 </template>

@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { reactive } from "vue";
+import { reactive, watch } from "vue";
 
 export const useInventoryStore = defineStore("inventory", () => {
   const productsStats = reactive({
@@ -22,10 +22,18 @@ export const useInventoryStore = defineStore("inventory", () => {
   });
 
   const productInventory = reactive({
-    category: [],
+    productList: [],
+    savedCategory: [],
     addCategory(newCategory) {
-      this.category.push(newCategory);
+      this.savedCategory.push(newCategory);
     },
+    addProduct(addProduct_) {
+      this.productList.push(addProduct_);
+    },
+  });
+
+  watch(productInventory.productList, (newVal) => {
+    console.log("Product List:", newVal);
   });
 
   return { productsStats, productInventory };

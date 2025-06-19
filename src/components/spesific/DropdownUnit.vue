@@ -1,18 +1,19 @@
 <script setup>
 import { useUnitOptStore } from "../../stores/useUnitOptions";
-import { ref } from "vue";
 const props = defineProps({
   FieldName: String,
+  modelValue: String,
 });
+defineEmits(["update:modelValue"]);
 const _unitOptions = useUnitOptStore();
-
-console.log(_unitOptions.unitOptions);
-
-const selectedUnit = ref();
 </script>
 <template>
   <div class="">
-    <select v-model="selectedUnit" class="outline-none">
+    <select
+      :value="modelValue"
+      @change="$emit('update:modelValue', $event.target.value)"
+      class="outline-none"
+    >
       <optgroup v-for="group in _unitOptions.unitOptions" :key="group.category">
         <option v-for="unit in group.units" :key="unit.value">
           {{ unit.label }}
