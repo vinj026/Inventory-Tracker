@@ -9,12 +9,12 @@ import { watch, onMounted, ref } from "vue";
 const inventoryStore = useInventoryStore();
 const ui = useUIStore();
 
-watch(
-  () => ui.formToggle,
-  (newVal) => {
-    console.log(newVal);
-  },
-);
+// watch(
+//   () => ui.formToggle,
+//   (newVal) => {
+//     console.log(newVal);
+//   },
+// );
 </script>
 <template>
   <div class="flex flex-col gap-6 bg-white-300 p-8">
@@ -28,11 +28,12 @@ watch(
         :Quantity="items.quantity"
         :Icon="items.icon"
       />
-
-      <Form
-        class="absolute right- top-1/2 -translate-y-1/2 right-10"
-        v-show="ui.formToggle"
-      />
+      <div class="h-full">
+        <Form
+          class="absolute top-1/2 -translate-y-1/2 right-10"
+          v-show="ui.formToggle"
+        />
+      </div>
     </div>
   </div>
 </template>

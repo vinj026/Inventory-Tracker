@@ -12,7 +12,6 @@ const iconComponent = ref(null);
 onMounted(async () => {
   const module = await import("lucide-vue-next");
   iconComponent.value = module[props.Icon];
-  console.log(iconComponent);
 });
 </script>
 <template>

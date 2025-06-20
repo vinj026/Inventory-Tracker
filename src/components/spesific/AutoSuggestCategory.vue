@@ -15,7 +15,7 @@ const showSuggestions = ref(false);
 
 const filtCategory = computed(() => {
   return props.modelValue
-    ? inventoryStore.productInventory.category.filter((option) =>
+    ? inventoryStore.productInventory.savedCategory.filter((option) =>
         option.toLowerCase().includes(props.modelValue.toLowerCase()),
       )
     : inventoryStore.productInventory.category;
@@ -32,6 +32,13 @@ watch(
     showSuggestions.value = val && filtCategory.value.length > 0;
   },
 );
+
+watch(
+  () => [props.modelValue, props.isInputFocus],
+  ([val, isFocus]) => {
+    showSuggestions.value = isFocus && val && filtCategory.value.length > 0;
+  },
+);
 </script>
 
 <template>
@@ -45,7 +52,7 @@ watch(
         :key="index"
         @click="selectCategory(option)"
         class="cursor-pointer hover:bg-white-400 p-2 rounded"
-        v-if="inventoryStore.productInventory.category.length > 0"
+        v-if="inventoryStore.productInventory.savedCategory.length > 0"
       >
         {{ option }}
       </li>
