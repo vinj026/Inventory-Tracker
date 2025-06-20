@@ -3,12 +3,14 @@ import { useUnitOptStore } from "../../stores/useUnitOptions";
 const props = defineProps({
   FieldName: String,
   modelValue: String,
+  HasError: Boolean,
+  ErrorMessage: String,
 });
 defineEmits(["update:modelValue"]);
 const _unitOptions = useUnitOptStore();
 </script>
 <template>
-  <div class="">
+  <div>
     <select
       :value="modelValue"
       @change="$emit('update:modelValue', $event.target.value)"

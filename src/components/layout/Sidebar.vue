@@ -32,16 +32,12 @@ const sideBar = reactive({
 });
 
 const currPage = computed(() => route.path.replace(/^\//, ""));
-
-watch(route, () => {
-  console.log(currPage.value);
-});
 </script>
 
 <template>
   <div
     :class="[
-      'flex flex-col text-black-500 p-7 gap-10 justify-between border-r border-white-500 duration-300 ease-out origin-left',
+      'flex flex-col text-black-500  p-7 gap-10 justify-between border-r border-white-500 duration-300 ease-out origin-left',
       sideBar.isExpanded ? 'w-70' : 'w-25',
     ]"
   >

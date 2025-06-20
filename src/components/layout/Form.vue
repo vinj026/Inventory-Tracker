@@ -14,7 +14,6 @@ const inputFocus = reactive({
   isUnitFocus: false,
 });
 const ui = useUIStore();
-const categoryInput = ref("");
 let ignoreNextClick = false;
 const formInput = reactive({
   productName: "",
@@ -29,33 +28,60 @@ const formInput = reactive({
 const formInputError = reactive({
   productName: {
     error: false,
-    errorMsg: "Product name is required.",
+    errorMsg: "",
   },
   SKU: {
     error: false,
-    errorMsg: "SKU cannot be empty.",
+    errorMsg: "",
   },
   category: {
     error: false,
-    errorMsg: "Please select a category.",
+    errorMsg: "",
   },
   costPrice: {
     error: false,
-    errorMsg: "Cost price is required.",
+    errorMsg: "",
   },
   sellingPrice: {
     error: false,
-    errorMsg: "Selling price is required.",
+    errorMsg: "",
   },
   quantity: {
     error: false,
-    errorMsg: "Quantity is required.",
+    errorMsg: "",
   },
   unitType: {
     error: false,
-    errorMsg: "Please select a unit type.",
+    errorMsg: "",
   },
 });
+
+const formFields = [
+  {
+    name: "Product Name",
+    model: "productName",
+    type: "text",
+    placeholder: "e.g. Blue T-Shirt",
+  },
+  {
+    name: "SKU",
+    model: "SKU",
+    type: "text",
+    placeholder: "e.g. BLU-TSHIRT-001",
+  },
+  {
+    name: "Cost Price",
+    model: "costPrice",
+    type: "number",
+    placeholder: "e.g. 50000",
+  },
+  {
+    name: "Selling Price",
+    model: "sellingPrice",
+    type: "number",
+    placeholder: "e.g. 75000",
+  },
+];
 
 function isFormValid() {
   let isValid = true;
@@ -63,39 +89,34 @@ function isFormValid() {
   Object.entries(formInput).forEach(([key, value]) => {
     if (!value || value.trim() === "") {
       formInputError[key].error = true;
-
+      formInputError[key].errorMsg =
+        ` ${key.replace(/([A-Z])/g, " $1").replace(/^./, (str) => str.toUpperCase())} is required`;
       console.log("Form has errors.");
       isValid = false;
     } else {
       formInputError[key].error = false;
+      console.log("Form Valid");
     }
   });
 
   return isValid;
 }
-
-function handleSubmitForm() {
-  isFormValid();
-  // if (isFormValid()) {
-  //   console.log("Form is valid, submitting...");
-  //   // inventoryStore.productInventory.addProduct(formInput)
-  // } else {
-  //   console.log("Form has errors.");
-  // }
-  // // inventoryStore.productInventory.addProduct(formInput);
+function isDuplicate() {
+  return inventoryStore.productInventory.productList.some(
+    (item) => item.SKU === formInput.SKU,
+  );
 }
 
-function handleClickOutside(event) {
-  const formEl = document.getElementById("form");
-
-  if (ignoreNextClick) {
-    ignoreNextClick = false;
+function handleSubmitForm() {
+  if (!isFormValid()) {
+    console.log("Form has errors.");
     return;
   }
 
-  if (formEl && !formEl.contains(event.target)) {
-    ui.formToggle = false;
-    console.log("Klik di luar form → tutup");
+  if (!isDuplicate()) {
+    const newProduct = { ...formInput };
+    inventoryStore.productInventory.addCategory(formInput.category);
+    inventoryStore.productInventory.addProduct(newProduct);
   }
 }
 
@@ -107,6 +128,21 @@ onBeforeUnmount(() => {
   document.removeEventListener("click", handleClickOutside);
 });
 
+watch(inventoryStore.productInventory.productList, (newVal) => {
+  console.log("Product List:", newVal);
+});
+function handleClickOutside(event) {
+  const formEl = document.getElementById("form");
+
+  if (ignoreNextClick) {
+    ignoreNextClick = false;
+    return;
+  }
+
+  if (formEl && !formEl.contains(event.target)) {
+    ui.formToggle = false;
+  }
+}
 watch(
   () => ui.formToggle,
   (val) => {
@@ -116,15 +152,19 @@ watch(
   },
 );
 
-watch(formInputError, (newVal) => {
-  console.log(newVal);
-});
+watch(
+  () => inventoryStore.productInventory.savedCategory,
+  (newVal) => {
+    console.log("Saved Category updated:", newVal);
+  },
+  { deep: true },
+);
 </script>
 
 <template>
   <div
     id="form"
-    class="flex flex-col gap-6 bg-white-300 w-1/3 border border-white-500 p-6 rounded-2xl"
+    class="flex flex-col gap-6 bg-white-300 w-1/3 border border-white-500 p-6 rounded-2xl max-h-[calc(100vh-80px)] overflow-y-auto"
   >
     <div class="flex justify-between text-black-400 items-center gap-4">
       <h1 class="text-black-400 flex font-bold text-xl">Add Product</h1>
@@ -138,22 +178,18 @@ watch(formInputError, (newVal) => {
 
     <hr class="border-white-600" />
     <form class="flex flex-col gap-4" action="">
+      <!-- Dynamic Fields -->
       <FormField
-        FieldName="Product Name"
-        v-model="formInput.productName"
-        Type="text"
-        Placeholder="e.g. Blue T-Shirt"
-        :HasError="formInputError.productName.error"
-        :ErrorMessage="formInputError.productName.errorMsg"
+        v-for="field in formFields"
+        :key="field.model"
+        :FieldName="field.name"
+        v-model="formInput[field.model]"
+        :Type="field.type"
+        :Placeholder="field.placeholder"
+        :HasError="formInputError[field.model].error"
+        :ErrorMessage="formInputError[field.model].errorMsg"
       />
-      <FormField
-        FieldName="SKU"
-        v-model="formInput.SKU"
-        Type="text"
-        Placeholder="e.g. BLU-TSHIRT-001"
-        :HasError="formInputError.SKU.error"
-        :ErrorMessage="formInputError.SKU.errorMsg"
-      />
+
       <div>
         <FormField
           FieldName="Category"
@@ -168,7 +204,7 @@ watch(formInputError, (newVal) => {
             <div
               class="absolute top-1/2 right-2 -translate-y-1/2 bg-white-400 text-black-300 rounded-md cursor-pointer"
               @click="
-                inventoryStore.productInventory.addCategory(categoryInput)
+                inventoryStore.productInventory.addCategory(formInput.category)
               "
             >
               <Plus class="p-1" />
@@ -177,43 +213,39 @@ watch(formInputError, (newVal) => {
         </FormField>
 
         <AutoSuggest
-          v-model="categoryInput"
+          v-model="formInput.category"
           :isInputFocus="inputFocus.isCategoryFocus"
         />
       </div>
-      <div class="flex gap-2">
-        <FormField
-          FieldName="Cost Price"
-          v-model="formInput.costPrice"
-          Type="number"
-          Placeholder="e.g. 50000"
-          :HasError="formInputError.costPrice.error"
-          :ErrorMessage="formInputError.costPrice.errorMsg"
-        />
-        <FormField
-          FieldName="Selling Price"
-          v-model="formInput.sellingPrice"
-          Type="number"
-          Placeholder="e.g. 75000"
-          :HasError="formInputError.sellingPrice.error"
-          :ErrorMessage="formInputError.sellingPrice.errorMsg"
-        />
-      </div>
 
-      <div class="flex w-full gap-2 justify-center items-center">
+      <div class="flex w-full gap-2 justify-center">
         <FormField
           FieldName="Quantity"
           v-model="formInput.quantity"
-          Type="Number"
+          Type="number"
           Placeholder="e.g. 1000"
           :HasError="formInputError.quantity.error"
           :ErrorMessage="formInputError.quantity.errorMsg"
         />
         <div class="flex flex-col gap-1">
           <h1 class="font-bold text-black-400 text-md">Unit Type</h1>
-          <div class="border border-white-400 p-2 rounded-lg">
-            <DropdownUnit v-model="formInput.unitType" />
+          <div
+            :class="[
+              'border border-white-400 p-2 rounded-lg',
+              formInputError.unitType.error && '!border-orange-900',
+            ]"
+          >
+            <DropdownUnit
+              data-testid="dropdown-unit"
+              v-model="formInput.unitType"
+            />
           </div>
+          <p
+            v-show="formInputError.unitType.error"
+            class="text-xs font-medium text-orange-900"
+          >
+            {{ formInputError.unitType.errorMsg }}
+          </p>
         </div>
       </div>
     </form>

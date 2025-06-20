@@ -1,10 +1,10 @@
 <script setup>
-import { Plus } from "lucide-vue-next";
 const props = defineProps({
   FieldName: String,
   Placeholder: String,
   Type: String,
   HasError: Boolean,
+  ErrorMessage: String,
   modelValue: String,
   InputClass: {
     type: String,
@@ -24,12 +24,16 @@ defineEmits(["update:modelValue", "focus", "blur"]);
         :type="Type"
         :placeholder="Placeholder"
         :value="modelValue"
-        :class="[InputClass, HasError && '!border-orange-700']"
+        :class="[InputClass, HasError && '!border-orange-900']"
         @focus="$emit('focus', $event)"
         @blur="$emit('blur', $event)"
         @input="$emit('update:modelValue', $event.target.value)"
       />
       <slot name="append" />
     </div>
+
+    <p class="text-xs font-medium text-orange-900" v-show="ErrorMessage">
+      {{ ErrorMessage }}
+    </p>
   </div>
 </template>

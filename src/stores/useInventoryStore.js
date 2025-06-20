@@ -32,9 +32,5 @@ export const useInventoryStore = defineStore("inventory", () => {
     },
   });
 
-  watch(productInventory.productList, (newVal) => {
-    console.log("Product List:", newVal);
-  });
-
   return { productsStats, productInventory };
 });
