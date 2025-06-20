@@ -95,7 +95,6 @@ function isFormValid() {
       isValid = false;
     } else {
       formInputError[key].error = false;
-      console.log("Form Valid");
     }
   });
 
@@ -115,8 +114,9 @@ function handleSubmitForm() {
 
   if (!isDuplicate()) {
     const newProduct = { ...formInput };
-    inventoryStore.productInventory.addCategory(formInput.category);
     inventoryStore.productInventory.addProduct(newProduct);
+  } else {
+    console.log("Data Duplicate");
   }
 }
 
@@ -190,7 +190,7 @@ watch(
         :ErrorMessage="formInputError[field.model].errorMsg"
       />
 
-      <div>
+      <div class="relative">
         <FormField
           FieldName="Category"
           v-model="formInput.category"
@@ -199,18 +199,7 @@ watch(
           @blur="inputFocus.isCategoryFocus = false"
           :HasError="formInputError.category.error"
           :ErrorMessage="formInputError.category.errorMsg"
-        >
-          <template #append>
-            <div
-              class="absolute top-1/2 right-2 -translate-y-1/2 bg-white-400 text-black-300 rounded-md cursor-pointer"
-              @click="
-                inventoryStore.productInventory.addCategory(formInput.category)
-              "
-            >
-              <Plus class="p-1" />
-            </div>
-          </template>
-        </FormField>
+        />
 
         <AutoSuggest
           v-model="formInput.category"

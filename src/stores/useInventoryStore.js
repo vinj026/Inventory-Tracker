@@ -24,13 +24,37 @@ export const useInventoryStore = defineStore("inventory", () => {
   const productInventory = reactive({
     productList: [],
     savedCategory: [],
-    addCategory(newCategory) {
-      this.savedCategory.push(newCategory);
-    },
+
     addProduct(addProduct_) {
       this.productList.push(addProduct_);
+      this.savedCategory.push(addProduct_.category);
     },
   });
 
-  return { productsStats, productInventory };
+  function loadFromLocalStorage() {
+    const categories = localStorage.getItem("savedCategory");
+    if (categories) {
+      productInventory.savedCategory = JSON.parse(categories);
+    }
+
+    const products = localStorage.getItem("productList");
+    if (products) {
+      productInventory.productList = JSON.parse(products);
+    }
+  }
+  watch(
+    () => productInventory.productList,
+    (val) => {
+      localStorage.setItem("productList", JSON.stringify(val));
+    },
+    { deep: true },
+  );
+  watch(
+    () => productInventory.savedCategory,
+    (val) => {
+      localStorage.setItem("savedCategory", JSON.stringify(val));
+    },
+    { deep: true },
+  );
+  return { productsStats, productInventory, loadFromLocalStorage };
 });

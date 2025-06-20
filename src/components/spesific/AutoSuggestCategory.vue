@@ -18,7 +18,7 @@ const filtCategory = computed(() => {
     ? inventoryStore.productInventory.savedCategory.filter((option) =>
         option.toLowerCase().includes(props.modelValue.toLowerCase()),
       )
-    : inventoryStore.productInventory.category;
+    : inventoryStore.productInventory.savedCategory;
 });
 
 const selectCategory = (option) => {
@@ -34,9 +34,9 @@ watch(
 );
 
 watch(
-  () => [props.modelValue, props.isInputFocus],
-  ([val, isFocus]) => {
-    showSuggestions.value = isFocus && val && filtCategory.value.length > 0;
+  () => props.isInputFocus,
+  (val) => {
+    showSuggestions.value = val;
   },
 );
 </script>
@@ -50,7 +50,7 @@ watch(
       <li
         v-for="(option, index) in filtCategory"
         :key="index"
-        @click="selectCategory(option)"
+        @mousedown="selectCategory(option)"
         class="cursor-pointer hover:bg-white-400 p-2 rounded"
         v-if="inventoryStore.productInventory.savedCategory.length > 0"
       >
