@@ -12,11 +12,6 @@ const currentPage =
 <template>
   <div class="flex justify-between items-center w-full text-black-400">
     <h1 class="font-black text-3xl">{{ currentPage }}</h1>
-    <Button
-      Name="Add Item"
-      Icon="Plus"
-      @click="ui.formToggle = !ui.formToggle"
-      class="hover:cursor-pointer"
-    />
+    <Button Name="Add Item" Icon="Plus" @click="ui.formToggle = !ui.formToggle" class="hover:cursor-pointer" />
   </div>
 </template>

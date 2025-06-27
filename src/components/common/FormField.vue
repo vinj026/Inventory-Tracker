@@ -5,7 +5,7 @@ const props = defineProps({
   Type: String,
   HasError: Boolean,
   ErrorMessage: String,
-  modelValue: String,
+  modelValue: [Number, String],
   InputClass: {
     type: String,
     default:
@@ -20,15 +20,9 @@ defineEmits(["update:modelValue", "focus", "blur"]);
   <div class="flex flex-col text-black-400 w-full gap-1">
     <h1 class="font-bold text-md">{{ FieldName }}</h1>
     <div class="relative">
-      <input
-        :type="Type"
-        :placeholder="Placeholder"
-        :value="modelValue"
-        :class="[InputClass, HasError && '!border-orange-900']"
-        @focus="$emit('focus', $event)"
-        @blur="$emit('blur', $event)"
-        @input="$emit('update:modelValue', $event.target.value)"
-      />
+      <input :type="Type" :placeholder="Placeholder" :value="modelValue"
+        :class="[InputClass, HasError && '!border-orange-900']" @focus="$emit('focus', $event)"
+        @blur="$emit('blur', $event)" @input="$emit('update:modelValue', $event.target.value)" />
       <slot name="append" />
     </div>
 

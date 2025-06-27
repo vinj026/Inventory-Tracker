@@ -2,11 +2,14 @@
 import Sidebar from "@/components/layout/Sidebar.vue";
 import { onMounted } from "vue";
 import { useInventoryStore } from "@/stores/useInventoryStore.js";
+import { useTransactionStore } from "@/stores/useTransactionStore";
 
 const inventoryStore = useInventoryStore();
+const transactionStore = useTransactionStore()
 
 onMounted(() => {
   inventoryStore.loadFromLocalStorage();
+  transactionStore.loadFromLocalStorage();
   console.log(inventoryStore.productInventory.savedCategory);
   console.log(inventoryStore.productInventory.productList);
 });
