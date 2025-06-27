@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, onBeforeUnmount, watch } from 'vue'
+import { ref, onMounted, onBeforeUnmount, watch, computed } from 'vue'
 import { Chart } from 'chart.js/auto'
 
 const props = defineProps({
@@ -44,7 +44,10 @@ function selectType(type) {
   emit('update:selectedChart', type)
 }
 
-
+const hasData = computed(() => {
+  return props.chartData?.labels?.length > 0 &&
+    props.chartData.datasets?.[0]?.data?.length > 0
+})
 
 onBeforeUnmount(() => {
   if (chartInstance) {
@@ -88,7 +91,10 @@ watch(
       </div>
     </div>
     <div class="w-full h-[250px] pb-4 px-4">
-      <canvas ref="canvasRef" class="w-full h-full" />
+      <div v-if="!hasData" class="w-full h-full flex items-center justify-center text-black-50">
+        No transaction data yet
+      </div>
+      <canvas v-else ref="canvasRef" class="w-full h-full" />
     </div>
   </div>
 </template>

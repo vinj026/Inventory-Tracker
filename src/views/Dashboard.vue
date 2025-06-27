@@ -67,11 +67,11 @@ const lowStockItems = computed(() =>
     <PageTitle />
     <hr class="border-white-500" />
 
-    <div class="grid grid-cols-4 gap-4">
+    <div class="grid grid-cols-4 gap-4 ">
       <Card v-for="(items, key) in productsStats" :Title="key" :Quantity="items.quantity.value" :Icon="items.icon" />
       <Form class="absolute top-1/2 -translate-y-1/2 right-10" v-show="ui.formToggle" />
     </div>
-    <div class="grid grid-cols-2 gap-4 w-full">
+    <div class="grid grid-cols-2 gap-4 h-full w-full">
       <div>
         <TableSection title="Low Stock Items">
           <LowStockTable :data="lowStockItems" />
