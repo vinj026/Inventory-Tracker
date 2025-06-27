@@ -2,32 +2,19 @@ import { defineStore } from "pinia";
 import { reactive, watch } from "vue";
 
 export const useInventoryStore = defineStore("inventory", () => {
-  const productsStats = reactive({
-    "Total Product in Inventory": {
-      quantity: 2936,
-      icon: "Warehouse",
-    },
-    "Low Stock Items": {
-      quantity: 523,
-      icon: "TriangleAlert",
-    },
-    "Items In": {
-      quantity: 1523,
-      icon: "PackagePlus",
-    },
-    "Items Out": {
-      quantity: 2452,
-      icon: "PackageMinus",
-    },
-  });
+
 
   const productInventory = reactive({
     productList: [],
     savedCategory: [],
 
     addProduct(addProduct_) {
+      const isCategoryDuplicate = this.savedCategory.includes(addProduct_.category)
       this.productList.push(addProduct_);
-      this.savedCategory.push(addProduct_.category);
+
+      if (!isCategoryDuplicate) {
+        this.savedCategory.push(addProduct_.category);
+      }
     },
   });
 
@@ -56,5 +43,5 @@ export const useInventoryStore = defineStore("inventory", () => {
     },
     { deep: true },
   );
-  return { productsStats, productInventory, loadFromLocalStorage };
+  return { productInventory, loadFromLocalStorage };
 });

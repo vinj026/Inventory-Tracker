@@ -15,9 +15,7 @@ onMounted(async () => {
 });
 </script>
 <template>
-  <div
-    class="flex flex-col gap-4 w-full text-black-400 border border-white-500 p-6 rounded-2xl"
-  >
+  <div class="flex flex-col gap-4 w-full text-black-400 border border-white-500 p-6 rounded-2xl">
     <div class="flex flex-col gap-3">
       <div class="flex p-2 bg-white-400 w-fit rounded-lg">
         <component :is="iconComponent" class="text-black-200" />
