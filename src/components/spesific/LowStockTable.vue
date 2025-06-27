@@ -6,7 +6,7 @@ const props = defineProps({
 
 <template>
   <div class="flex w-full h-full justify-center items-center">
-    <div v-if="data.length !== 0" class="overflow-x-auto border border-white-400 rounded-xl">
+    <div v-if="data.length !== 0" class="w-full overflow-x-auto border border-white-400 rounded-xl">
       <table class="min-w-full text-sm text-left">
         <thead class="bg-white-400 text-black-300 font-bold uppercase">
           <tr>
