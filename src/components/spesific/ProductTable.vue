@@ -14,6 +14,12 @@ function formatCurrency(value) {
   }).format(value)
 }
 
+const selectedCategory = ref("All")
+
+const filteredProducts = computed(() => {
+  if (selectedCategory.value === "All") return products.value
+  return products.value.filter(p => p.category === selectedCategory.value)
+})
 
 const selectedSkus = ref([])
 
@@ -54,12 +60,21 @@ watch(selectedSkus, (newVal) => {
 <template>
 
   <div v-if="products.length > 0" class="h-full flex gap-2 flex-col w-full ">
-    <div class="self-end">
-
+    <div class="flex gap-2 self-end">
       <button :disabled="selectedSkus.length === 0" @click="deleteAllSelected"
         class=" bg-error-container text-onerror-container px-3 py-1 rounded text-sm font-semibold hover:bg-error-container/90 hover:text-onerror-container/70 hover:cursor-pointer disabled:opacity-50">
         Delete Selected
       </button>
+      <div class=" flex justify-end">
+        <select v-model="selectedCategory"
+          class="border border-white-500 text-black-300 font-medium  px-2 py-1 rounded">
+          <option value="All">All</option>
+          <option v-for="cat in [...new Set(products.map(p => p.category))]" :key="cat" :value="cat">
+            {{ cat }}
+          </option>
+        </select>
+      </div>
+
     </div>
     <div class="flex-1 border border-white-400 rounded-xl h-full overflow-hidden">
       <div class="overflow-y-auto h-full">
@@ -93,8 +108,8 @@ watch(selectedSkus, (newVal) => {
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(item, index) in products" :key="index"
-              class=" border-t border-white-400 text-black-400 hover:bg-white-400">
+            <tr v-for="(item, index) in filteredProducts" :key="index"
+              class=" border-b border-white-400 text-black-400 hover:bg-white-400">
               <td>
                 <div class="flex justify-center">
                   <label class="flex items-center cursor-pointer relative">
