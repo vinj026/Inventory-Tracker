@@ -57,4 +57,7 @@ body {
   --color-red-800: #710000;
   --color-red-900: #450000;
   --color-red-950: #310000;
+  --color-error: #ba1a1a;
+  --color-error-container: #ffdad6;
+  --color-onerror-container: #93000a;
 }
