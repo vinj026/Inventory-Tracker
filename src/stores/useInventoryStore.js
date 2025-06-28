@@ -16,6 +16,9 @@ export const useInventoryStore = defineStore("inventory", () => {
         this.savedCategory.push(addProduct_.category);
       }
     },
+    deleteProductBySKU(sku) {
+      this.productList = this.productList.filter(p => p.SKU !== sku)
+    }
   });
 
   function loadFromLocalStorage() {
